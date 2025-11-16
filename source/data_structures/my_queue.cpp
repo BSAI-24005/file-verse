@@ -1,62 +1,61 @@
-#include<iostream>
+#include "../../include/my_queue.hpp"
+#include <mutex>
+#include <condition_variable>
+
 using namespace std;
 
-struct Request {
-    string operation;
-    string data;
-};
-
-class MyQueue {
+struct TSQImpl {
     Request* arr;
-    int front;
-    int rear;
-    int size;
     int capacity;
-public:
-    MyQueue(int cap) {
-        capacity=cap;
-        arr=new Request[capacity];
-        front=0;
-        rear=-1;
-        size=0;
+    int head;
+    int tail;
+    int count;
+    std::mutex m;
+    std::condition_variable cv;
+    TSQImpl(int cap) {
+        capacity = cap;
+        arr = new Request[capacity];
+        head = 0; tail = 0; count = 0;
     }
-
-    bool isEmpty() {
-        return size==0;
-    }
-
-    bool isFull() {
-        return size==capacity;
-    }
-
-    void enqueue(Request r) {
-        if(isFull()) {
-            cout<<"Queue full"<<endl;
-            return;
-        }
-        rear=(rear+1)%capacity;
-        arr[rear]=r;
-        size++;
-    }
-
-    Request dequeue() {
-        Request temp;
-        if(isEmpty()) {
-            cout<<"Queue empty"<<endl;
-            return temp;
-        }
-        temp=arr[front];
-        front=(front+1)%capacity;
-        size--;
-        return temp;
-    }
-
-    Request peek() {
-        if(isEmpty()) {
-            Request temp;
-            cout<<"Queue empty"<<endl;
-            return temp;
-        }
-        return arr[front];
-    }
+    ~TSQImpl() { delete[] arr; }
 };
+
+TSQueue::TSQueue(int cap) {
+    impl = (void*) new TSQImpl(cap);
+}
+
+TSQueue::~TSQueue() {
+    TSQImpl* p = (TSQImpl*)impl;
+    delete p;
+}
+
+void TSQueue::enqueue(const Request &r) {
+    TSQImpl* p = (TSQImpl*)impl;
+    std::unique_lock<std::mutex> lock(p->m);
+    while (p->count == p->capacity) {
+        p->cv.wait(lock);
+    }
+    p->arr[p->tail] = r;
+    p->tail = (p->tail + 1) % p->capacity;
+    p->count++;
+    p->cv.notify_all();
+}
+
+Request TSQueue::dequeue() {
+    TSQImpl* p = (TSQImpl*)impl;
+    std::unique_lock<std::mutex> lock(p->m);
+    while (p->count == 0) {
+        p->cv.wait(lock);
+    }
+    Request tmp = p->arr[p->head];
+    p->head = (p->head + 1) % p->capacity;
+    p->count--;
+    p->cv.notify_all();
+    return tmp;
+}
+
+bool TSQueue::empty() {
+    TSQImpl* p = (TSQImpl*)impl;
+    std::unique_lock<std::mutex> lock(p->m);
+    return p->count == 0;
+}

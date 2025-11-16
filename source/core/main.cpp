@@ -1,12 +1,11 @@
-#include<iostream>
+#include <iostream>
 #include "ofs_core.hpp"
+#include "server.hpp"
 using namespace std;
 
 int main() {
-    cout<<"Formatting filesystem..."<<endl;
-    fs_format("compiled/sample.omni","compiled/default.uconf");
-    cout<<"Initializing..."<<endl;
+    fs_format("compiled/sample.omni", "compiled/default.uconf");
     fs_init("compiled/sample.omni");
-    cout<<"Done!"<<endl;
+    start_server("compiled/sample.omni", 8080);
     return 0;
 }
