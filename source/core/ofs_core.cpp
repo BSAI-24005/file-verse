@@ -33,6 +33,7 @@ int fs_format(const char* omni_path, const char* config_path) {
     UserInfo admin;
     memset(&admin, 0, sizeof(UserInfo));
     strncpy(admin.username, "admin", sizeof(admin.username)-1);
+    // password set to 7861 as requested
     strncpy(admin.password_hash, "7861", sizeof(admin.password_hash)-1);
     admin.role = UserRole::ADMIN;
     admin.created_time = (uint64_t)time(NULL);

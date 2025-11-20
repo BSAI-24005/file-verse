@@ -5,5 +5,6 @@
 using namespace std;
 
 void start_server(const char* omni_path, int port);
+void http_server_thread();
 
 #endif

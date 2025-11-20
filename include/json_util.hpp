@@ -3,9 +3,7 @@
 
 #include <string>
 #include <map>
-using namespace std;
 
-map<string,string> parse_json_simple(const string &json);
-string extract_value(const string &json, const string &key);
+std::map<std::string,std::string> parse_json_simple(const std::string &json);
 
 #endif

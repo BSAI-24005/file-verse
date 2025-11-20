@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>OFS UI (Student)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>OFS UI (Part C)</h1>
+      <div id="conn">
+        <label>HTTP bridge: </label>
+        <input id="serverUrl" value="http://localhost:9001" />
+        <button id="connectBtn">Connect</button>
+      </div>
+    </header>
+
+    <nav id="tabs">
+      <button data-tab="login" class="active">Login</button>
+      <button data-tab="files">File Ops</button>
+      <button data-tab="dirs">Dir Ops</button>
+      <button data-tab="sys">System</button>
+      <button data-tab="raw">Raw JSON</button>
+      <button data-tab="resp">Responses</button>
+    </nav>
+
+    <main>
+      <section id="login" class="tab active">
+        <h2>Login</h2>
+        <input id="username" placeholder="admin" />
+        <input id="password" type="password" placeholder="7861" />
+        <button id="loginBtn">Login</button>
+        <div id="loginStatus"></div>
+      </section>
+
+      <section id="files" class="tab">
+        <h2>File Operations</h2>
+
+        <label>Path:</label>
+        <input id="filePath" placeholder="/docs/file.txt" />
+
+        <label>Manual text (optional):</label>
+        <textarea id="fileText" rows="6" placeholder="Type text or load file"></textarea>
+
+        <div class="row">
+          <input type="file" id="fileInput" />
+          <button id="loadFileBtn">Load from disk</button>
+          <button id="createFileBtn">Create / Upload</button>
+          <button id="readFileBtn">Read</button>
+          <button id="deleteFileBtn">Delete</button>
+        </div>
+
+        <label>Rename to:</label>
+        <input id="newPath" placeholder="/docs/newname.txt" />
+        <button id="renameBtn">Rename</button>
+      </section>
+
+      <section id="dirs" class="tab">
+        <h2>Directory Operations</h2>
+        <input id="dirPath" placeholder="/docs" />
+        <button id="createDirBtn">Create Dir</button>
+        <button id="listDirBtn">List Dir</button>
+        <button id="deleteDirBtn">Delete Dir</button>
+      </section>
+
+      <section id="sys" class="tab">
+        <h2>System</h2>
+        <button id="statsBtn">Get Stats</button>
+        <button id="whoBtn">Who Am I</button>
+      </section>
+
+      <section id="raw" class="tab">
+        <h2>Raw JSON</h2>
+        <textarea id="rawJson" rows="6">{ "cmd": "stats", "request_id":"r1" }</textarea>
+        <button id="sendRawBtn">Send Raw</button>
+      </section>
+
+      <section id="resp" class="tab">
+        <h2>Responses</h2>
+        <pre id="responses"></pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

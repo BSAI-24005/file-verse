@@ -2,18 +2,18 @@
 #define MY_QUEUE_HPP
 
 #include <string>
-using namespace std;
+#include <condition_variable>
+#include <mutex>
 
 struct Request {
     int client_fd;
-    string json;
+    std::string json;
 };
 
 class TSQueue {
-private:
-    void *impl;
+    void* impl;
 public:
-    TSQueue(int cap);
+    TSQueue(int cap = 1000);
     ~TSQueue();
 
     void enqueue(const Request &r);
